@@ -4,6 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import torch
+import numpy as np
 
 from . import FairseqDataset
 
@@ -20,4 +21,4 @@ class RawLabelDataset(FairseqDataset):
         return len(self.labels)
 
     def collater(self, samples):
-        return torch.tensor(samples)
+        return torch.from_numpy(np.array(samples))

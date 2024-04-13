@@ -38,7 +38,7 @@ class KLDivergenceRerankingCriterionConfig(FairseqDataclass):
 
 
 @register_criterion(
-    "kl_divergence_rereanking", dataclass=KLDivergenceRerankingCriterionConfig
+    "kl_divergence_reranking", dataclass=KLDivergenceRerankingCriterionConfig
 )
 class KLDivergenceRerankingCriterion(FairseqCriterion):
     def __init__(

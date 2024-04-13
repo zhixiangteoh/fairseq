@@ -1,7 +1,7 @@
 # @package _group_
 
 common:
-  fp16: true
+  fp16: false
   log_format: json
   log_interval: 50
   seed: 2
@@ -24,7 +24,7 @@ dataset:
   batch_size: 50
   num_workers: 6
   required_batch_size_multiple: 50
-  valid_subset: ???
+  valid_subset: train
 
 criterion:
   _name: kl_divergence_reranking
@@ -53,4 +53,4 @@ model:
 
 distributed_training:
   ddp_backend: no_c10d
-  distributed_world_size: 16
+  distributed_world_size: 1

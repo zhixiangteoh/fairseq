@@ -35,7 +35,10 @@ class _FP16OptimizerMixin(object):
                 args, "pipeline_model_parallel", False
             ) and getattr(args, "distributed_no_spawn", False)
             total_param_size = sum(p.data.numel() for p in params)
-            devices = [torch.cuda.current_device()]
+            if torch.cuda.is_available():
+                devices = [torch.cuda.current_device()]
+            else:
+                devices = [torch.device("cpu")]
             if is_pipeline_parallel:
                 devices = list(set(args.pipeline_devices))
             fp32_params = {}
@@ -54,7 +57,7 @@ class _FP16OptimizerMixin(object):
                 offset = 0
                 for p in device_params:
                     numel = p.data.numel()
-                    fp32_params[device][offset : offset + numel].copy_(p.data.view(-1))
+                    fp32_params[device][offset: offset + numel].copy_(p.data.view(-1))
                     offset += numel
                 fp32_params[device] = torch.nn.Parameter(fp32_params[device])
                 fp32_params[device].grad = fp32_params[device].data.new(
@@ -128,7 +131,7 @@ class _FP16OptimizerMixin(object):
                         )
                         numel = grad_data.numel()
                         self.fp32_params[device].grad.data[
-                            offset : offset + numel
+                            offset: offset + numel
                         ].copy_(grad_data.view(-1))
                         offset += numel
             else:
@@ -159,7 +162,7 @@ class _FP16OptimizerMixin(object):
                     numel = p.data.numel()
                     p.data.copy_(
                         self.fp32_params[device]
-                        .data[offset : offset + numel]
+                        .data[offset: offset + numel]
                         .view_as(p.data)
                     )
                     offset += numel
